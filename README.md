@@ -1,14 +1,1 @@
-Template dockerfile
--back: nestjs
--front: angular
--bd: postgrer
 
-=> verifier le context dans le dockerfile du back et du front 
-
-La structure du projet doit etre comme ceci:
-
-├── docker-compose.yml
-├── path-to-angular/
-└── path-to-nestjs/
-
-GG
