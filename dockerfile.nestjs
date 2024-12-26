@@ -1,0 +1,38 @@
+    # Étape 1: Utilisation de l'image Node.js comme base
+    FROM node:18 AS build
+
+    # Répertoire de travail
+    WORKDIR /app
+
+    # Copier les fichiers de package
+    COPY package*.json ./
+
+    # Installer les dépendances
+    RUN npm install
+
+    # Copier tout le code source
+    COPY . .
+
+    # Compiler l'application NestJS
+    RUN npm run build
+
+    # Étape 2: Serveur avec Node.js pour l'application NestJS
+    FROM node:18
+
+    # Répertoire de travail
+    WORKDIR /app
+
+    # Copier les fichiers construits depuis l'étape précédente
+    COPY --from=build /app/dist /app/dist
+
+    # Copier les fichiers nécessaires
+    COPY package*.json ./
+
+    # Installer les dépendances en production
+    RUN npm install --only=production
+
+    # Exposer le port 3000
+    EXPOSE 3000
+
+    # Démarrer l'application NestJS
+    CMD ["node", "dist/main"]

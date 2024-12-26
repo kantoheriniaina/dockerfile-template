@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  angular:
+    build:
+      context: ./path-to-angular
+    ports:
+      - "80:80"
+    networks:
+      - app-network
+
+  nestjs:
+    build:
+      context: ./path-to-nestjs
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_HOST=postgres
+      - DATABASE_PORT=5432
+      - DATABASE_USERNAME=postgres
+      - DATABASE_PASSWORD=postgres
+      - DATABASE_NAME=mydatabase
+    depends_on:
+      - postgres
+    networks:
+      - app-network
+
+  postgres:
+    # Utilisation de l'image spécifique PostgreSQL
+    image: postgres:14.15-alpine3.21  
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: mydatabase
+    ports:
+      - "5432:5432"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
